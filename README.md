@@ -19,7 +19,7 @@ opensearch_vectorstore.create_search_pipelines(
 ```
 
 **Step-2: Hybrid Search**
-```
+```python
 query = "what are the country named in our database?"
 
 top_k = 3
