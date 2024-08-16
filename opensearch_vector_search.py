@@ -892,6 +892,50 @@ class OpenSearchVectorSearch(VectorStore):
             print(f"An error occurred: {e}")
 
         return pipeline_name in existed_pipelines
+    
+    def get_search_pipeline_info(self, pipeline_name: str) -> Optional[Dict]:
+        """
+        Get information about a search pipeline.
+
+        Args:
+            pipeline_name: Name of the pipeline
+
+        Returns:
+            dict: Information about the pipeline
+            None: If pipeline does not exist
+
+        Raises:
+            Exception: If an error occurs
+
+        Example:
+            >>> get_search_pipeline_info("my_pipeline_1")
+            {'search_pipeline_1': {
+                "description": "Post processor for hybrid search",
+                "phase_results_processors": [
+                    {
+                        "normalization-processor": {
+                            "normalization": {"technique": "min_max"},
+                            "combination": {
+                                "technique": "arithmetic_mean",
+                                "parameters": {"weights": [0.7, 0.3]}
+                            }
+                        }
+                    }
+                ]
+            }
+            }
+            >>> get_search_pipeline_info("my_pipeline_2")
+            None
+        """
+        response = None
+        try:
+            response = self.client.transport.perform_request(
+                method="GET", url=f"/_search/pipeline/{pipeline_name}"
+            )
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+        return response
 
     def similarity_search(
         self,
